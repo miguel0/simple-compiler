@@ -5,10 +5,11 @@ reserved = (
 	'IF', 'ELIF', 'ELSE',
 	'FOR', 'DO', 'WHILE',
 	'AND', 'OR',
+	'TRUE', 'FALSE',
 )
 
 tokens = reserved + (
-	'ID', 'BCONST', 'ICONST', 'FCONST', 'SCONST',
+	'ID', 'ICONST', 'FCONST', 'SCONST',
 )
 
 literals = [
