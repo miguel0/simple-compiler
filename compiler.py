@@ -18,3 +18,32 @@ literals = [
 	'==', '!=', '>', '<', '>=', '<=',
 	'=', ';',
 ]
+
+t_ignore = ' \t'
+
+def t_NEWLINE(t):
+	r'\n+'
+	t.lexer.lineno += t.value.count("\n")
+
+reserved_map = {}
+for r in reserved:
+	reserved_map[r.lower()] = r
+
+def t_ID(t):
+	r'[A-Za-z_][\w_]*'
+	t.type = reserved_map.get(t.value, "ID")
+	return t
+
+def t_error(t):
+	print("Illegal character %s" % repr(t.value[0]))
+	t.lexer.skip(1)
+
+t_ICONST = r'\d+([uU]|[lL]|[uU][lL]|[lL][uU])?'
+
+t_FCONST = r'((\d+)(\.\d+)(e(\+|-)?(\d+))? | (\d+)e(\+|-)?(\d+))([lL]|[fF])?'
+
+t_SCONST = r'\"([^\\\n]|(\\.))*?\"'
+
+lexer = lex.lex()
+if __name__ == "__main__":
+	lex.runmain(lexer)
