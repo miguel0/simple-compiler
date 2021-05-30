@@ -10,12 +10,12 @@ reserved = (
 
 tokens = reserved + (
 	'ID', 'ICONST', 'FCONST', 'SCONST',
+	'LT', 'LE', 'GT', 'GE', 'EQ', 'NE',
 )
 
 literals = [
 	'(', ')', '{', '}',
 	'+', '-', '*', '/', '^',
-	'==', '!=', '>', '<', '>=', '<=',
 	'=', ';',
 ]
 
@@ -24,6 +24,13 @@ t_ignore = ' \t'
 def t_NEWLINE(t):
 	r'\n+'
 	t.lexer.lineno += t.value.count("\n")
+
+t_LT = r'<'
+t_GT = r'>'
+t_LE = r'<='
+t_GE = r'>='
+t_EQ = r'=='
+t_NE = r'!='
 
 reserved_map = {}
 for r in reserved:
