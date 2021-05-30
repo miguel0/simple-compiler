@@ -1,3 +1,3 @@
 import ply.yacc as yacc
+from complex import tokens
 
-from calclex import tokens
