@@ -103,3 +103,25 @@ def p_else(p):
 	'''else : ELSE '{' block '}'
 			| empty'''
 	pass
+
+def p_loop(p):
+	'''loop : for
+			| while
+			| dowhile'''
+	pass
+
+def p_for(p):
+	'''for : FOR '(' simpexpr ';' boolexpr ';' assign ')' '{' block '}''''
+	pass
+
+def p_simpexpr(p):
+	'''simpexpr : type ID '=' expr ';'
+				| assign'''
+
+def p_while(p):
+	'''while : WHILE '(' boolexpr ')' '{' block '}''''
+	pass
+
+def p_dowhile(p):
+	'''dowhile : DO '{' block '}' WHILE '(' boolexpr ')' ';''''
+	pass
