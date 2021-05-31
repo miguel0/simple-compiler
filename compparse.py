@@ -1,9 +1,14 @@
 import ply.yacc as yacc
 from complex import tokens
 
+def p_empty(p):
+	'empty :'
+	pass
+
 def p_block(p):
 	'''block : stmt block
-			 | stmt'''
+			 | stmt
+			 | empty'''
 	pass
 
 def p_stmt(p):
@@ -83,4 +88,18 @@ def p_strexpr(p):
 
 def p_assign(p):
 	'''assign : ID '=' expr ';''''
+	pass
+
+def p_cond(p):
+	'''cond : IF '(' boolexpr ')' '{' block '}' elifs else'''
+	pass
+
+def p_elifs(p):
+	'''elifs : ELIF '(' boolexpr ')' '{' block '}' elifs
+			| empty'''
+	pass
+
+def p_else(p):
+	'''else : ELSE '{' block '}'
+			| empty'''
 	pass
