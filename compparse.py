@@ -2,6 +2,14 @@ import ply.yacc as yacc
 from complex import tokens
 from complex import lexer
 
+class Node:
+	def __init__(self,type, children=None):
+		self.type = type
+		if children:
+			self.children = children
+		else:
+			self.children = []
+
 def p_block(p):
 	'''block : stmt block
 			 | stmt
