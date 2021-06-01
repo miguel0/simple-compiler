@@ -73,7 +73,7 @@ def p_numexpr(p):
 	pass
 
 def p_numop(p):
-	'''numop | '+'
+	'''numop : '+'
 			 | '-'
 			 | '*'
 			 | '/'
@@ -82,9 +82,9 @@ def p_numop(p):
 
 def p_strexpr(p):
 	'''strexpr : SCONST
-			  | ID
-			  | strexpr '+' strexpr
-			  | strexpr '+' numexpr'''
+			   | STRING '(' numexpr ')'
+			   | ID
+			   | strexpr '+' strexpr'''
 	pass
 
 def p_assign(p):
