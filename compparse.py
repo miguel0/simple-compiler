@@ -1,14 +1,15 @@
 import ply.yacc as yacc
 from complex import tokens
-
-def p_empty(p):
-	'empty :'
-	pass
+from complex import lexer
 
 def p_block(p):
 	'''block : stmt block
 			 | stmt
 			 | empty'''
+	p[0] = 'buebos'
+
+def p_empty(p):
+	'empty :'
 	pass
 
 def p_stmt(p):
@@ -125,3 +126,6 @@ def p_while(p):
 def p_dowhile(p):
 	'''dowhile : DO '{' block '}' WHILE '(' boolexpr ')' ';''''
 	pass
+
+parser = yacc.yacc()
+print(parser.parse(lexer=lexer, input=open("input.txt").read()))
