@@ -5,36 +5,42 @@ from complex import lexer
 def p_block(p):
 	'''block : stmt block
 			 | stmt
-			 | empty'''
+			 | empty
+	'''
 	p[0] = 'buebos'
 
 def p_empty(p):
-	'empty :'
+	'''empty :
+	'''
 	pass
 
 def p_stmt(p):
 	'''stmt : dcl
 			| assign
 			| cond
-			| loop'''
+			| loop
+	'''
 	pass
 
 def p_dcl(p):
 	'''dcl : type ID ';'
-		   | type ID '=' expr ';''''
+		   | type ID '=' expr ';'
+	'''
 	pass
 
 def p_type(p):
 	'''type : BOOL
 			| INT
 			| FLOAT
-			| STRING'''
+			| STRING
+	'''
 	pass
 
 def p_expr(p):
 	'''expr : boolexpr
 			| numexpr
-			| strexpr'''
+			| strexpr
+	'''
 	pass
 
 def p_boolexpr(p):
@@ -42,12 +48,14 @@ def p_boolexpr(p):
 				| boolconst
 				| ID
 				| numexpr comp numexpr
-				| boolexpr boolop boolexpr'''
+				| boolexpr boolop boolexpr
+	'''
 	pass
 
 def p_boolconst(p):
 	'''boolconst : TRUE
-				 | FALSE'''
+				 | FALSE
+	'''
 	pass
 
 def p_comp(p):
@@ -56,12 +64,14 @@ def p_comp(p):
 			| GT
 			| GE
 			| EQ
-			| NE'''
+			| NE
+	'''
 	pass
 
 def p_boolop(p):
 	'''boolop : AND
-			  | OR'''
+			  | OR
+	'''
 	pass
 
 def p_numexpr(p):
@@ -69,7 +79,8 @@ def p_numexpr(p):
 			   | ICONST
 			   | FCONST
 			   | ID
-			   | numexpr numop numexpr'''
+			   | numexpr numop numexpr
+	'''
 	pass
 
 def p_numop(p):
@@ -77,42 +88,50 @@ def p_numop(p):
 			 | '-'
 			 | '*'
 			 | '/'
-			 | '^''''
+			 | '^'
+	'''
 	pass
 
 def p_strexpr(p):
 	'''strexpr : SCONST
 			   | STRING '(' numexpr ')'
 			   | ID
-			   | strexpr '+' strexpr'''
+			   | strexpr '+' strexpr
+	'''
 	pass
 
 def p_assign(p):
-	'''assign : ID '=' expr ';''''
+	'''assign : ID '=' expr ';'
+	'''
 	pass
 
 def p_cond(p):
-	'''cond : IF '(' boolexpr ')' '{' block '}' elifs else'''
+	'''cond : IF '(' boolexpr ')' '{' block '}' elifs else
+	'''
 	pass
 
 def p_elifs(p):
 	'''elifs : ELIF '(' boolexpr ')' '{' block '}' elifs
-			| empty'''
+			 | empty
+	'''
 	pass
 
 def p_else(p):
 	'''else : ELSE '{' block '}'
-			| empty'''
+			| empty
+	'''
 	pass
 
 def p_loop(p):
 	'''loop : for
 			| while
-			| dowhile'''
+			| dowhile
+	'''
 	pass
 
 def p_for(p):
-	'''for : FOR '(' simpexpr ';' boolexpr ';' assign ')' '{' block '}''''
+	'''for : FOR '(' simpexpr ';' boolexpr ';' assign ')' '{' block '}'
+	'''
 	pass
 
 def p_simpexpr(p):
@@ -120,11 +139,13 @@ def p_simpexpr(p):
 				| assign'''
 
 def p_while(p):
-	'''while : WHILE '(' boolexpr ')' '{' block '}''''
+	'''while : WHILE '(' boolexpr ')' '{' block '}'
+	'''
 	pass
 
 def p_dowhile(p):
-	'''dowhile : DO '{' block '}' WHILE '(' boolexpr ')' ';''''
+	'''dowhile : DO '{' block '}' WHILE '(' boolexpr ')' ';'
+	'''
 	pass
 
 parser = yacc.yacc()
