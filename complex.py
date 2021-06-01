@@ -45,9 +45,9 @@ def t_error(t):
 	print("Illegal character %s" % repr(t.value[0]))
 	t.lexer.skip(1)
 
-t_ICONST = r'\d+([uU]|[lL]|[uU][lL]|[lL][uU])?'
+t_ICONST = r'-?\d+([uU]|[lL]|[uU][lL]|[lL][uU])?'
 
-t_FCONST = r'((\d+)(\.\d+)(e(\+|-)?(\d+))? | (\d+)e(\+|-)?(\d+))([lL]|[fF])?'
+t_FCONST = r'-?((\d+)(\.\d+)(e(\+|-)?(\d+))? | (\d+)e(\+|-)?(\d+))([lL]|[fF])?'
 
 t_SCONST = r'\"([^\\\n]|(\\.))*?\"'
 
