@@ -130,13 +130,16 @@ def p_loop(p):
 	pass
 
 def p_for(p):
-	'''for : FOR '(' simpexpr ';' boolexpr ';' assign ')' '{' block '}'
+	'''for : FOR '(' simpexpr ';' boolexpr ';' simpexpr ')' '{' block '}'
 	'''
 	pass
 
 def p_simpexpr(p):
-	'''simpexpr : type ID '=' expr ';'
-				| assign'''
+	'''simpexpr : type ID
+				| type ID '=' expr
+				| ID '=' expr
+	'''
+	pass
 
 def p_while(p):
 	'''while : WHILE '(' boolexpr ')' '{' block '}'
