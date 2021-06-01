@@ -3,19 +3,28 @@ from complex import tokens
 from complex import lexer
 
 class Node:
-	def __init__(self,type, children=None):
+	def __init__(self, type, children=None):
 		self.type = type
 		if children:
 			self.children = children
 		else:
 			self.children = []
 
+def printChildren(node):
+	print(node.type)
+	if node.children:
+		for i in node.children:
+			printChildren(i)
+
 def p_block(p):
 	'''block : stmt block
 			 | stmt
 			 | empty
 	'''
-	p[0] = 'buebos'
+	if len(p) == 3:
+		p[0] = Node('block', [p[1], p[2]])
+	else:
+		p[0] = p[1]
 
 def p_empty(p):
 	'''empty :
@@ -28,13 +37,16 @@ def p_stmt(p):
 			| cond
 			| loop
 	'''
-	pass
+	p[0] = p[1]
 
 def p_dcl(p):
 	'''dcl : type ID ';'
 		   | type ID '=' expr ';'
 	'''
-	pass
+	if len(p) == 4:
+		p[0] = Node('dcl', [p[1], p[2]])
+	else:
+		p[0] = Node('dclassign', [p[1], p[2], p[4]])
 
 def p_type(p):
 	'''type : BOOL
@@ -42,29 +54,38 @@ def p_type(p):
 			| FLOAT
 			| STRING
 	'''
-	pass
+	p[0] = p[1]
 
 def p_expr(p):
 	'''expr : boolexpr
 			| numexpr
 			| strexpr
 	'''
-	pass
+	p[0] = p[1]
 
-def p_boolexpr(p):
+def p_boolexpr_bool(p):
 	'''boolexpr : '(' boolexpr ')'
 				| boolconst
 				| ID
-				| numexpr comp numexpr
 				| boolexpr boolop boolexpr
 	'''
-	pass
+	if p[1] == '(':
+		p[0] = Node('bool', [p[2]])
+	elif len(p) == 2:
+		p[0] = Node('bool', [p[1]])
+	else:
+		p[0] = Node('boolop', [p[1], p[2], p[3]])
+
+def p_boolexpr_num(p):
+	'''boolexpr : numexpr comp numexpr
+	'''
+	p[0] = Node('numcomp', [p[1], p[2], p[3]])
 
 def p_boolconst(p):
 	'''boolconst : TRUE
 				 | FALSE
 	'''
-	pass
+	p[0] = p[1]
 
 def p_comp(p):
 	'''comp : LT
@@ -74,13 +95,13 @@ def p_comp(p):
 			| EQ
 			| NE
 	'''
-	pass
+	p[0] == p[1]
 
 def p_boolop(p):
 	'''boolop : AND
 			  | OR
 	'''
-	pass
+	p[0] = p[1]
 
 def p_numexpr(p):
 	'''numexpr : '(' numexpr ')'
@@ -89,7 +110,12 @@ def p_numexpr(p):
 			   | ID
 			   | numexpr numop numexpr
 	'''
-	pass
+	if p[1] == '(':
+		p[0] = Node('num', p[2])
+	if len(p) == 2:
+		p[0] = Node('num', p[1])
+	else:
+		p[0] = Node('numop', [p[1], p[2], p[3]])
 
 def p_numop(p):
 	'''numop : '+'
@@ -98,7 +124,7 @@ def p_numop(p):
 			 | '/'
 			 | '^'
 	'''
-	pass
+	p[0] = p[1]
 
 def p_strexpr(p):
 	'''strexpr : SCONST
@@ -106,12 +132,17 @@ def p_strexpr(p):
 			   | ID
 			   | strexpr '+' strexpr
 	'''
-	pass
+	if len(p) == 4:
+		p[0] = Node('concat', [p[1], p[3]])
+	elif len(p) == 5:
+		p[0] = Node('strcast', [p[3]])
+	else:
+		p[0] = Node('str', [p[1]])
 
 def p_assign(p):
 	'''assign : ID '=' expr ';'
 	'''
-	pass
+	p[0] = Node('assign', [p[1], p[3]])
 
 def p_cond(p):
 	'''cond : IF '(' boolexpr ')' '{' block '}' elifs else
@@ -160,4 +191,5 @@ def p_dowhile(p):
 	pass
 
 parser = yacc.yacc()
-print(parser.parse(lexer=lexer, input=open("input.txt").read()))
+res = parser.parse(lexer=lexer, input=open("input.txt").read())
+printChildren(res)
