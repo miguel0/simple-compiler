@@ -1,0 +1,19 @@
+int a = 9;
+int b = 10;
+int c;
+c = a + b;
+if (true) {
+	float i = 1.9;
+}
+
+while (true) {
+	float j = 1.8;
+}
+
+for (int i = 0; i < 69; i++) {
+	float k = 1.7;
+}
+
+do {
+	float l = 1.6;
+} while (true);
