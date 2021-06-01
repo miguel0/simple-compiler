@@ -11,10 +11,13 @@ class Node:
 			self.children = []
 
 def printChildren(node):
-	print(node.type)
-	if node.children:
-		for i in node.children:
-			printChildren(i)
+	if isinstance(node, Node):
+		print(node.type)
+		if node.children:
+			for i in node.children:
+				printChildren(i)
+	else:
+		print(node)
 
 def p_block(p):
 	'''block : stmt block
