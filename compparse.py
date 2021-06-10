@@ -223,3 +223,13 @@ def writeLine(*argv):
 	tac_str = tac_str[:-1]
 	tac_str += '\n'
 	line += 1
+
+def getVar():
+	global var
+	var += 1
+	return 'r' + str(var)
+
+def gen_tac(node):
+	if not isinstance(node, Node):
+		return node
+	
