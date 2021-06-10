@@ -26,7 +26,7 @@ def p_block(p):
 	'''
 	if len(p) == 3:
 		p[0] = Node('block', [p[1], p[2]])
-	else:
+	elif p[1]:
 		p[0] = p[1]
 
 def p_empty(p):
@@ -98,6 +98,7 @@ def p_comp(p):
 			| EQ
 			| NE
 	'''
+	print('AAAAAAAAAAAAA', p[1])
 	p[0] == p[1]
 
 def p_boolop(p):
@@ -150,48 +151,61 @@ def p_assign(p):
 def p_cond(p):
 	'''cond : IF '(' boolexpr ')' '{' block '}' elifs else
 	'''
-	pass
+	p[0] = Node('if', [p[3], p[6]])
+	if p[8]:
+		p[0].children.append(p[8])
+	if p[9]:
+		p[0].children.append(p[9])
 
 def p_elifs(p):
 	'''elifs : ELIF '(' boolexpr ')' '{' block '}' elifs
 			 | empty
 	'''
-	pass
+	if len(p) > 2:
+		p[0] = Node('elif', [p[3], p[6]])
+		if p[8]:
+			p[0].children.append(p[8])
 
 def p_else(p):
 	'''else : ELSE '{' block '}'
 			| empty
 	'''
-	pass
+	if len(p) > 2:
+		p[0] = Node('else', [p[3]])
 
 def p_loop(p):
 	'''loop : for
 			| while
 			| dowhile
 	'''
-	pass
+	p[0] = p[1]
 
 def p_for(p):
 	'''for : FOR '(' simpexpr ';' boolexpr ';' simpexpr ')' '{' block '}'
 	'''
-	pass
+	p[0] = Node('for', [p[3], p[5], p[7], p[10]])
 
 def p_simpexpr(p):
 	'''simpexpr : type ID
 				| type ID '=' expr
 				| ID '=' expr
 	'''
-	pass
+	if len(p) == 3:
+		p[0] = Node('dcl', [p[1], p[2]])
+	elif len(p) == 5:
+		p[0] = Node('dclassign', [p[1], p[2], p[4]])
+	else:
+		p[0] = Node('assign', [p[1], p[3]])
 
 def p_while(p):
 	'''while : WHILE '(' boolexpr ')' '{' block '}'
 	'''
-	pass
+	p[0] = Node('while', [p[3], p[6]])
 
 def p_dowhile(p):
 	'''dowhile : DO '{' block '}' WHILE '(' boolexpr ')' ';'
 	'''
-	pass
+	p[0] = Node('dowhile', [p[3], p[7]])
 
 parser = yacc.yacc()
 res = parser.parse(lexer=lexer, input=open("input.txt").read())
