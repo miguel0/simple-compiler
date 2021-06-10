@@ -214,7 +214,7 @@ var = -1
 tac_str = ""
 line = 0
 
-def writeLine(*argv):
+def write_line(*argv):
 	global tac_str
 	global line
 
@@ -224,7 +224,7 @@ def writeLine(*argv):
 	tac_str += '\n'
 	line += 1
 
-def getVar():
+def get_var():
 	global var
 	var += 1
 	return 'r' + str(var)
@@ -233,30 +233,44 @@ def gen_tac(node):
 	if not isinstance(node, Node):
 		return node
 	
+	global line
+	c = node.children
+
 	if node.type == 'block':
-		pass
+		gen_tac(c[0])
+		gen_tac(c[1])
 	if node.type == 'dcl':
 		pass
 	if node.type == 'dclassign':
-		pass
+		write_line(c[1], '=', gen_tac(c[2]))
 	if node.type == 'bool':
-		pass
+		return gen_tac(c[0])
 	if node.type == 'boolop':
-		pass
+		v = get_var()
+		write_line(v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
+		return v
 	if node.type == 'numcomp':
-		pass
+		v = get_var()
+		write_line(v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
+		return v
 	if node.type == 'num':
-		pass
+		return gen_tac(c)
 	if node.type == 'numop':
-		pass
+		v = get_var()
+		write_line(v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
+		return v
 	if node.type == 'concat':
-		pass
+		v = get_var()
+		write_line(v, '=', gen_tac(c[0]), '+', gen_tac(c[2]))
+		return v
 	if node.type == 'strcast':
-		pass
+		v = get_var()
+		write_line(v, '=', 'num2str(', c[0], ')')
+		return v
 	if node.type == 'str':
-		pass
+		return gen_tac(c[0])
 	if node.type == 'assign':
-		pass
+		write_line(c[0], '=', gen_tac(c[1]))
 	if node.type == 'if':
 		pass
 	if node.type == 'elif':
@@ -269,3 +283,6 @@ def gen_tac(node):
 		pass
 	if node.type == 'dowhile':
 		pass
+
+gen_tac(res)
+print(tac_str)
