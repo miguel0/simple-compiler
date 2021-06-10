@@ -1,19 +1,18 @@
-int a = 9;
-int b = 10;
-int c;
-c = a + b;
-if (true) {
+if (a > b + 6) {
 	float i = 1.9;
+} elif (a) {
+	b = 5;
+	c = b + 87;
+	if(true) {
+		setso = 5;
+	} else {
+		a = "buebos";
+	}
+	c = "aaaaaaa";
+} elif (true) {
+	sexo = 10000;	
+} else {
+	b = "ocho";
 }
+a= 8;
 
-while (true) {
-	float j = 1.8;
-}
-
-for (int i = 0; i < 69; i = i+1) {
-	float k = 1.7;
-}
-
-do {
-	float l = 1.6;
-} while (true);

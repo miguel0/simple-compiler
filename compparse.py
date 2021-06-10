@@ -211,8 +211,10 @@ res = parser.parse(lexer=lexer, input=open("input.txt").read())
 # printChildren(res)
 
 var = -1
+label = -1
 tac_str = ""
 line = 0
+label_stack = []
 
 def write_line(*argv):
 	global tac_str
@@ -229,6 +231,11 @@ def get_var():
 	var += 1
 	return 'r' + str(var)
 
+def get_label():
+	global label
+	label += 1
+	return 'L' + str(label)
+
 def add_line_num(my_str):
 	arr = my_str.split('\n')
 	for i in range(len(arr)):
@@ -240,11 +247,13 @@ def gen_tac(node):
 		return node
 	
 	global line
+	global label_stack
 	c = node.children
 
 	if node.type == 'block':
 		gen_tac(c[0])
-		gen_tac(c[1])
+		if len(c) == 2:
+			gen_tac(c[1])
 	if node.type == 'dcl':
 		pass
 	if node.type == 'dclassign':
@@ -278,11 +287,50 @@ def gen_tac(node):
 	if node.type == 'assign':
 		write_line(c[0], '=', gen_tac(c[1]))
 	if node.type == 'if':
-		pass
+		if len(c) == 4:
+			label1 = get_label()
+			label2 = get_label()
+			label_stack.append(label2)
+
+			write_line('if', 'false', gen_tac(c[0]), 'goto', label1)
+			gen_tac(c[1])
+			write_line('goto', label2)
+			write_line(label1)
+			gen_tac(c[2])
+			gen_tac(c[3])
+			write_line(label_stack.pop())			
+		elif len(c) == 3:
+			label1 = get_label()
+			label2 = get_label()
+			label_stack.append(label2)
+
+			write_line('if', 'false', gen_tac(c[0]), 'goto', label1)
+			gen_tac(c[1])
+			write_line('goto', label2)
+			write_line(label1)
+			gen_tac(c[2])
+			write_line(label_stack.pop())
+		else:
+			label = get_label()
+			write_line('if', 'false', gen_tac(c[0]), 'goto', label)
+			gen_tac(c[1])
+			write_line(label)
 	if node.type == 'elif':
-		pass
+		if len(c) == 3:
+			label = get_label()
+			write_line('if', 'false', gen_tac(c[0]), 'goto', label)
+			gen_tac(c[1])
+			write_line('goto', label_stack[-1])
+			write_line(label)
+			gen_tac(c[2])
+		else:
+			label = get_label()
+			write_line('if', 'false', gen_tac(c[0]), 'goto', label)
+			gen_tac(c[1])
+			write_line('goto', label_stack[-1])
+			write_line(label)
 	if node.type == 'else':
-		pass
+		gen_tac(c[0])
 	if node.type == 'for':
 		pass
 	if node.type == 'while':
