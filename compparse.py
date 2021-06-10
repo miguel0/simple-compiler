@@ -208,4 +208,18 @@ def p_dowhile(p):
 
 parser = yacc.yacc()
 res = parser.parse(lexer=lexer, input=open("input.txt").read())
-printChildren(res)
+# printChildren(res)
+
+var = -1
+tac_str = ""
+line = 0
+
+def writeLine(*argv):
+	global tac_str
+	global line
+
+	for arg in argv:
+		tac_str += (arg + ' ')
+	tac_str = tac_str[:-1]
+	tac_str += '\n'
+	line += 1
