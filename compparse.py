@@ -98,8 +98,7 @@ def p_comp(p):
 			| EQ
 			| NE
 	'''
-	print('AAAAAAAAAAAAA', p[1])
-	p[0] == p[1]
+	p[0] = p[1]
 
 def p_boolop(p):
 	'''boolop : AND
