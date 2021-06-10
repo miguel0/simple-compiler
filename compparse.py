@@ -233,3 +233,39 @@ def gen_tac(node):
 	if not isinstance(node, Node):
 		return node
 	
+	if node.type == 'block':
+		pass
+	if node.type == 'dcl':
+		pass
+	if node.type == 'dclassign':
+		pass
+	if node.type == 'bool':
+		pass
+	if node.type == 'boolop':
+		pass
+	if node.type == 'numcomp':
+		pass
+	if node.type == 'num':
+		pass
+	if node.type == 'numop':
+		pass
+	if node.type == 'concat':
+		pass
+	if node.type == 'strcast':
+		pass
+	if node.type == 'str':
+		pass
+	if node.type == 'assign':
+		pass
+	if node.type == 'if':
+		pass
+	if node.type == 'elif':
+		pass
+	if node.type == 'else':
+		pass
+	if node.type == 'for':
+		pass
+	if node.type == 'while':
+		pass
+	if node.type == 'dowhile':
+		pass
