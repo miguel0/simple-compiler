@@ -27,7 +27,7 @@ def p_block(p):
 	if len(p) == 3:
 		p[0] = Node('block', [p[1], p[2]])
 	elif p[1]:
-		p[0] = p[1]
+		p[0] = Node('block', [p[1]])
 
 def p_empty(p):
 	'''empty :
@@ -214,14 +214,25 @@ var = -1
 tac_str = ""
 line = 0
 
-def write_line(*argv):
+def write_line(i, *argv):
 	global tac_str
 	global line
 
-	for arg in argv:
-		tac_str += (arg + ' ')
-	tac_str = tac_str[:-1]
-	tac_str += '\n'
+	if i >= 0:
+		tac_arr = tac_str.split('\n')
+
+		my_str = ''
+		for arg in argv:
+			my_str += (str(arg) + ' ')
+		my_str = my_str[:-1]
+		tac_arr.insert(i, my_str)
+		tac_str = '\n'.join(tac_arr)
+	else:
+		for arg in argv:
+			tac_str += (str(arg) + ' ')
+		tac_str = tac_str[:-1]
+		tac_str += '\n'
+	
 	line += 1
 
 def get_var():
@@ -235,7 +246,17 @@ def add_line_num(my_str):
 		arr[i] = str(i) + '. ' + arr[i]
 	return '\n'.join(arr)
 
-def gen_tac(node):
+def del_lines(i):
+	global tac_str
+	global line
+
+	tac_arr = tac_str.split('\n')
+	tac_arr = tac_arr[:i]
+	tac_str = '\n'.join(tac_arr)
+	tac_str += '\n'
+	line = len(tac_arr)
+
+def gen_tac(node, *argv):
 	if not isinstance(node, Node):
 		return node
 	
@@ -244,45 +265,91 @@ def gen_tac(node):
 
 	if node.type == 'block':
 		gen_tac(c[0])
-		gen_tac(c[1])
+		if len(c) == 2:
+			gen_tac(c[1])
+		return line
 	if node.type == 'dcl':
 		pass
 	if node.type == 'dclassign':
-		write_line(c[1], '=', gen_tac(c[2]))
+		write_line(-1, c[1], '=', gen_tac(c[2]))
 	if node.type == 'bool':
 		return gen_tac(c[0])
 	if node.type == 'boolop':
 		v = get_var()
-		write_line(v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
+		write_line(-1, v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
 		return v
 	if node.type == 'numcomp':
 		v = get_var()
-		write_line(v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
+		write_line(-1, v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
 		return v
 	if node.type == 'num':
 		return gen_tac(c)
 	if node.type == 'numop':
 		v = get_var()
-		write_line(v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
+		write_line(-1, v, '=', gen_tac(c[0]), c[1], gen_tac(c[2]))
 		return v
 	if node.type == 'concat':
 		v = get_var()
-		write_line(v, '=', gen_tac(c[0]), '+', gen_tac(c[2]))
+		write_line(-1, v, '=', gen_tac(c[0]), '+', gen_tac(c[2]))
 		return v
 	if node.type == 'strcast':
 		v = get_var()
-		write_line(v, '=', 'num2str(', c[0], ')')
+		write_line(-1, v, '=', 'num2str(', c[0], ')')
 		return v
 	if node.type == 'str':
 		return gen_tac(c[0])
 	if node.type == 'assign':
-		write_line(c[0], '=', gen_tac(c[1]))
+		write_line(-1, c[0], '=', gen_tac(c[1]))
 	if node.type == 'if':
-		pass
+		if len(c) == 4:
+			cond = gen_tac(c[0])
+			l = line
+			block = gen_tac(c[1])
+
+			extra = gen_tac(c[2], -1, -1)
+			extra = gen_tac(c[3], -1, -1)
+			del_lines(block)
+			extra = gen_tac(c[2], extra, 2)
+			gen_tac(c[3])
+
+			write_line(l, 'if', 'not', cond, 'goto', block + 2)
+			write_line(block + 1, 'goto', line + 1)
+		elif len(c) == 3:
+			cond = gen_tac(c[0])
+			l = line
+			block = gen_tac(c[1])
+
+			extra = gen_tac(c[2], -1, -1)
+			del_lines(block)
+			extra = gen_tac(c[2], extra, 2)
+
+			write_line(l, 'if', 'not', cond, 'goto', block + 2)
+			write_line(block + 1, 'goto', line + 1)
+		else:
+			cond = gen_tac(c[0])
+			l = line
+			block = gen_tac(c[1])
+
+			write_line(l, 'if', 'not', cond, 'goto', block + 1)
 	if node.type == 'elif':
-		pass
+		if len(c) == 3:
+			cond = gen_tac(c[0])
+			l = line
+			block = gen_tac(c[1])
+			extra = gen_tac(c[2], argv[0], argv[1] + 1)
+
+			write_line(l, 'if', 'not', cond, 'goto', block + argv[1] * 2)
+			write_line(block + 1, 'goto', argv[0] + 2)
+		else:
+			cond = gen_tac(c[0])
+			l = line
+			block = gen_tac(c[1])
+
+			write_line(l, 'if', 'not', cond, 'goto', block + argv[1] * 2)
+			write_line(block + 1, 'goto', argv[0] + 2)
+		return line
 	if node.type == 'else':
-		pass
+		return gen_tac(c[0])
 	if node.type == 'for':
 		pass
 	if node.type == 'while':
