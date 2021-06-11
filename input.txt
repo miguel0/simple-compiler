@@ -1,18 +1,41 @@
+float a;
+float b = 10;
+
 if (a > b + 6) {
 	float i = 1.9;
-} elif (a) {
+} elif (a > 10) {
 	b = 5;
-	c = b + 87;
+	float c = b + 87;
 	if(true) {
-		setso = 5;
+		c = 5;
 	} else {
-		a = "buebos";
+		c = 10;
 	}
-	c = "aaaaaaa";
+	c = 100;
 } elif (true) {
-	sexo = 10000;	
+	a = 10000;	
 } else {
-	b = "ocho";
+	b = 8;
 }
-a= 8;
 
+string str = "hola";
+str = str + string(a);
+str = str + "adios";
+
+a = 8;
+for(int i = 0; i < 10; i = i + 1) {
+	a = a + i;
+}
+a = 100;
+
+bool bol = true;
+bool d = bol and true;
+while(d) {
+	f = false;
+}
+f = 5 > 10;
+
+do {
+	b = b + 1;
+} while(b < 15);
+b = b + 100;

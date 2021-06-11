@@ -71,6 +71,7 @@ def p_boolexpr_bool(p):
 				| boolconst
 				| ID
 				| boolexpr boolop boolexpr
+				| ID boolop boolexpr
 	'''
 	if p[1] == '(':
 		p[0] = Node('bool', [p[2]])
@@ -112,6 +113,7 @@ def p_numexpr(p):
 			   | FCONST
 			   | ID
 			   | numexpr numop numexpr
+			   | ID numop numexpr 
 	'''
 	if p[1] == '(':
 		p[0] = Node('num', p[2])
@@ -134,6 +136,7 @@ def p_strexpr(p):
 			   | STRING '(' numexpr ')'
 			   | ID
 			   | strexpr '+' strexpr
+			   | ID '+' strexpr
 	'''
 	if len(p) == 4:
 		p[0] = Node('concat', [p[1], p[3]])
@@ -276,11 +279,11 @@ def gen_tac(node):
 		return v
 	if node.type == 'concat':
 		v = get_var()
-		write_line(v, '=', gen_tac(c[0]), '+', gen_tac(c[2]))
+		write_line(v, '=', gen_tac(c[0]), '+', gen_tac(c[1]))
 		return v
 	if node.type == 'strcast':
 		v = get_var()
-		write_line(v, '=', 'num2str(', c[0], ')')
+		write_line(v, '=', 'num2str(', gen_tac(c[0]), ')')
 		return v
 	if node.type == 'str':
 		return gen_tac(c[0])
@@ -332,11 +335,34 @@ def gen_tac(node):
 	if node.type == 'else':
 		gen_tac(c[0])
 	if node.type == 'for':
-		pass
+		label1 = get_label()
+		label2 = get_label()
+
+		gen_tac(c[0])
+		write_line(label1)
+		write_line('if', 'false', gen_tac(c[1]), 'goto', label2)
+		gen_tac(c[3])
+		gen_tac(c[2])
+		write_line('goto', label1)
+		write_line(label2)
 	if node.type == 'while':
-		pass
+		label1 = get_label()
+		label2 = get_label()
+
+		write_line(label1)
+		write_line('if', 'false', gen_tac(c[0]), 'goto', label2)
+		gen_tac(c[1])
+		write_line('goto', label1)
+		write_line(label2)
 	if node.type == 'dowhile':
-		pass
+		label1 = get_label()
+		label2 = get_label()
+
+		write_line(label1)
+		gen_tac(c[0])
+		write_line('if', 'false', gen_tac(c[1]), 'goto', label2)
+		write_line('goto', label1)
+		write_line(label2)
 
 gen_tac(res)
 tac_str = add_line_num(tac_str)
