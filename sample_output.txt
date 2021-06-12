@@ -1,0 +1,64 @@
+b = 10
+r1 = b + 6
+r0 = a > r1
+if false r0 goto L0
+i = 1.9
+goto L1
+L0
+r2 = a > 10
+if false r2 goto L2
+b = 5
+r3 = b + 87
+c = r3
+if false true goto L3
+c = 5
+goto L4
+L3
+c = 10
+L4
+c = 100
+goto L1
+L2
+if false true goto L5
+a = 10000
+goto L1
+L5
+b = 8
+L1
+str = "hola"
+r5 = num2str( a )
+r4 = str + r5
+str = r4
+r6 = str + "adios"
+str = r6
+a = 8
+i = 0
+L6
+r7 = i < 10
+if false r7 goto L7
+r8 = a + i
+a = r8
+r9 = i + 1
+i = r9
+goto L6
+L7
+a = 100
+bol = true
+r10 = bol and true
+d = r10
+L8
+if false d goto L9
+f = false
+goto L8
+L9
+r11 = 5 > 10
+f = r11
+L10
+r12 = b + 1
+b = r12
+r13 = b < 15
+if false r13 goto L11
+goto L10
+L11
+r14 = b + 100
+b = r14

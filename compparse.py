@@ -210,7 +210,8 @@ def p_dowhile(p):
 	p[0] = Node('dowhile', [p[3], p[7]])
 
 parser = yacc.yacc()
-res = parser.parse(lexer=lexer, input=open("input.txt").read())
+file_name = input('Enter name of file to compile:\n-> ')
+res = parser.parse(lexer=lexer, input=open(file_name).read())
 # printChildren(res)
 
 var = -1
@@ -365,5 +366,9 @@ def gen_tac(node):
 		write_line(label2)
 
 gen_tac(res)
-tac_str = add_line_num(tac_str)
-print(tac_str)
+
+f = open('out.txt', 'w')
+f.write(tac_str)
+f.close()
+
+print('DONE!')
